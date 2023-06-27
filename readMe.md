@@ -2,7 +2,7 @@
 
 JuiceBox 
 
-- What are we building?
+What are we building?
 
 Nothing less than a Back-End-Only project. We are going to make a "Simple" Tumblr clone. I use quotes around simple because it will be anything but simple for to implement.
 
@@ -17,22 +17,22 @@ Also, there's not a great preview for this part of the project, so a screenshot 
 # What Will We Need to Know?
 
 SQL
-    - How to connect to PostgreSQL from the command line
-    - Basic PostgreSQL commands like \c, \d
-    - The basics of creating/dropping an entire database
-    - The basics of creating/dropping a table
-    - Basic data types
-    - What a primary key is
-    - What a foreign key is
-    - How to insert data into a database
-    - How to retrieve data from a database
-    - How to update data in a database
-    - How to join related tables into one mega-table
+    How to connect to PostgreSQL from the command line
+    Basic PostgreSQL commands like \c, \d
+    The basics of creating/dropping an entire database
+    The basics of creating/dropping a table
+    Basic data types
+    What a primary key is
+    What a foreign key is
+    How to insert data into a database
+    How to retrieve data from a database
+    How to update data in a database
+    How to join related tables into one mega-table
 
 NODE
-    - How to connect to a database using pg
-    - How to separate our concerns and organize our code
-    - How to export/import functionality from one file to another
+    How to connect to a database using pg
+    How to separate our concerns and organize our code
+    How to export/import functionality from one file to another
 
 # Success Metrics
 
