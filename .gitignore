@@ -1,3 +1,4 @@
 node_modules
-readMe.md
-psql.md
+
+# Ignore file named `psql.txt`
+psql.txt
