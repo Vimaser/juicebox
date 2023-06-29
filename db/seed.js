@@ -1,15 +1,16 @@
 const { client,
         getAllUsers,
-        createUser
+        createUser,
+        updateUser
     } = require('./index');
 
 async function createInitialUsers() {
     try {
         console.log("Starting to create users...");
 
-        await createUser ({ username: 'albert', password: 'bertie99' })
-        await createUser ({ username: 'sandra', password: '2sandy4me' })
-        await createUser ({ username: 'glamgal', password: 'soglam' })
+        await createUser ({ username: 'albert', password: 'bertie99', name: 'Al Bert', location: 'Al Bert', active: "true" })
+        await createUser ({ username: 'sandra', password: '2sandy4me', name: 'Just Sandra', location: "Ain't tellin'", active: "true" })
+        await createUser ({ username: 'glamgal', password: 'soglam', name: 'Joshua', location: 'Upper East Side', active: "true" })
         
 
         console.log("Finished creating users!");
@@ -42,8 +43,11 @@ async function createTables() {
         await client.query(`
             CREATE TABLE users (
                 id SERIAL PRIMARY KEY,
-                username varchar(2552) UNIQUE NOT NULL,
-                password varchar(255) NOT NULL
+                username varchar(255) UNIQUE NOT NULL,
+                password varchar(255) NOT NULL,
+                name VARCHAR(255) NOT NULL,
+                location VARCHAR(255) NOT NULL,
+                active BOOLEAN DEFAULT true
             );
         `);
 
@@ -71,8 +75,16 @@ async function testDB() {
     try {
         console.log("Starting to test database...");
 
+        console.log("Calling getAllUsers")
         const users = await getAllUsers();
-        console.log("getAllUsers:", users);
+        console.log("Result:", users);
+
+        console.log("Calling udateUser on users[0]")
+        const updateUserResult = await updateUser(users[0].id, {
+            name: "Newname Sogood",
+            location: "Lesterville, KY"
+        });
+        console.log("Result:", updateUserResult);
 
         console.log("Finished database test!")
     } catch(error) {
