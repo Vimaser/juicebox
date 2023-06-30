@@ -12,6 +12,8 @@ const {
     getPostById,
     addTagsToPost,
     createInitialPosts,
+    createInitialTags,
+    getPostsByTagName,
     getPostsByUser
    
   } = require('./index');
@@ -50,50 +52,7 @@ async function dropTables() {
       throw error;
     }
   }
-
-
-/*   async function createTables() {
-    try {
-      console.log("Starting to build tables...");
-  
-      await client.query(`
-        CREATE TABLE users (
-          id SERIAL PRIMARY KEY,
-          username varchar(255) UNIQUE NOT NULL,
-          password varchar(255) NOT NULL,
-          name varchar(255) NOT NULL,
-          location varchar(255) NOT NULL,
-          active boolean DEFAULT true
-        );
-  
-        CREATE TABLE tags (
-          id SERIAL PRIMARY KEY,
-          name varchar(255) UNIQUE NOT NULL
-        );
-  
-        CREATE TABLE posts (
-          id SERIAL PRIMARY KEY,
-          authorId INTEGER REFERENCES users(id),
-          title varchar(255) NOT NULL,
-          content TEXT NOT NULL,
-          active BOOLEAN DEFAULT true
-        );
-  
-        CREATE TABLE post_tags (
-          postId INTEGER REFERENCES posts(id),
-          tagId INTEGER REFERENCES tags(id),
-          CONSTRAINT unique_post_tag UNIQUE (postId, tagId)
-        );
-      `);
-  
-      console.log("Finished building tables...");
-    } catch (error) {
-      console.error("Error building tables:", error);
-      throw error;
-    }
-  }
-   */
-  
+ 
   async function createTables() {
     try {
       console.log("Starting to build tables...");
@@ -123,8 +82,8 @@ async function dropTables() {
   
         CREATE TABLE post_tags (
           postid INTEGER REFERENCES posts(id),
-          tagId INTEGER REFERENCES tags(id),
-          CONSTRAINT unique_post_tag UNIQUE (postid, tagId)
+          tagid INTEGER REFERENCES tags(id),
+          CONSTRAINT unique_post_tag UNIQUE (postid, tagid)
         );
       `);
   
@@ -133,78 +92,7 @@ async function dropTables() {
       console.error("Error building tables:", error);
       throw error;
     }
-  }
-  
-  
-
-/* async function createInitialTags() {
-    try {
-      console.log("Starting to create tags...");
-  
-      const [happy, sad, inspo, catman] = await createTags([
-        '#happy',
-        '#worst-day-ever',
-        '#youcandoanything',
-        '#catmandoeverything'
-      ]);
-  
-      const [postOne, postTwo, postThree] = await getAllPosts();
-  
-      await addTagsToPost(postOne.id, [happy, inspo]);
-      await addTagsToPost(postTwo.id, [sad, inspo]);
-      await addTagsToPost(postThree.id, [happy, catman, inspo]);
-  
-      console.log("Finished creating tags!");
-    } catch (error) {
-      console.log("Error creating tags!");
-      throw error;
-    }
-  } */
-  
-  async function createInitialTags() {
-    try {
-      console.log("Starting to create tags...");
-  
-      const tags = await createTags([
-        '#happy',
-        '#worst-day-ever',
-        '#youcandoanything',
-        '#catmandoeverything',
-      ]);
-  
-      console.log("Tags created:", tags);
-  
-      const posts = await getAllPosts();
-      console.log("Posts:", posts);
-  
-      const [postOne, postTwo, postThree] = posts;
-  
-      console.log("Adding tags to postOne:", postOne, tags[0], tags[2]);
-      if (postOne && tags[0] && tags[2]) {
-        await addTagsToPost(postOne.id, [tags[0].id, tags[2].id]);
-      }
-  
-      console.log("Adding tags to postTwo:", postTwo, tags[1], tags[2]);
-      if (postTwo && tags[1] && tags[2]) {
-        await addTagsToPost(postTwo.id, [tags[1].id, tags[2].id]);
-      }
-  
-      console.log("Adding tags to postThree:", postThree, tags[0], tags[3], tags[2]);
-      if (postThree && tags[0] && tags[3] && tags[2]) {
-        await addTagsToPost(postThree.id, [tags[0].id, tags[3].id, tags[2].id]);
-      }
-  
-      console.log("Finished creating tags!");
-    } catch (error) {
-      console.log("Error creating tags!");
-      throw error;
-    }
-  }
-  
-  
-
-  
-  
+  }  
 
   async function rebuildDB() {
     try {
@@ -217,52 +105,6 @@ async function dropTables() {
       await createInitialTags();
     } catch (error) {
       console.log("Error during rebuildDB")
-      throw error;
-    }
-  }
-
-  async function createInitialTags() {
-    try {
-      console.log("Starting to create tags...");
-  
-      const tags = await createTags([
-        '#happy',
-        '#worst-day-ever',
-        '#youcandoanything',
-        '#catmandoeverything',
-      ]);
-  
-      console.log("Tags created:", tags);
-  
-      const posts = await getAllPosts();
-      console.log("Posts:", posts);
-  
-      const [postOne, postTwo, postThree] = posts;
-  
-      console.log("Adding tags to postOne:", postOne, tags[0], tags[2]);
-      if (postOne && tags[0] && tags[2]) {
-        await addTagsToPost(postOne.id, [tags[0].id, tags[2].id]);
-      } else {
-        console.log("Skipping adding tags to postOne:", postOne, tags[0], tags[2]);
-      }
-  
-      console.log("Adding tags to postTwo:", postTwo, tags[1], tags[2]);
-      if (postTwo && tags[1] && tags[2]) {
-        await addTagsToPost(postTwo.id, [tags[1].id, tags[2].id]);
-      } else {
-        console.log("Skipping adding tags to postTwo:", postTwo, tags[1], tags[2]);
-      }
-  
-      console.log("Adding tags to postThree:", postThree, tags[0], tags[3], tags[2]);
-      if (postThree && tags[0] && tags[3] && tags[2]) {
-        await addTagsToPost(postThree.id, [tags[0].id, tags[3].id, tags[2].id]);
-      } else {
-        console.log("Skipping adding tags to postThree:", postThree, tags[0], tags[3], tags[2]);
-      }
-  
-      console.log("Finished creating tags!");
-    } catch (error) {
-      console.log("Error creating tags!");
       throw error;
     }
   }
@@ -299,8 +141,18 @@ async function dropTables() {
       console.log("Result:", albert);
       
       console.log("Calling getPostsById");
-    const postById = await getPostById(1)
-    console.log("Post:", postById)
+      const postById = await getPostById(1)
+      console.log("Post:", postById)
+
+      console.log("Calling updatePost on posts[1], only updating tags");
+      const updatePostTagsResult = await updatePost(posts[1].id, {
+        tags: ["#youcandoanything", "#redfish", "#bluefish"]
+      });
+      console.log("Result:", updatePostTagsResult);
+
+      console.log("Calling getPostsByTagName with #happy");
+      const postsWithHappy = await getPostsByTagName("#happy");
+      console.log("Result:", postsWithHappy);
       
       console.log("Finished database tests!");
     } catch (error) {
@@ -317,13 +169,13 @@ async function dropTables() {
           await createTables();
           await createInitialUsers();
           await createInitialPosts();
-          await createInitialTags(); // new
+          //await createInitialTags(); 
         } catch (error) {
           console.log("Error during rebuildDB")
           throw error;
         }
       }
-      
+
   rebuildDB()
     .then(testDB)
     .catch(console.error)
