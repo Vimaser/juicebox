@@ -309,8 +309,23 @@ async function dropTables() {
     }
   }
   
-  
+      async function rebuildDB() {
+        try {
+          client.connect();
+      
+          await dropTables();
+          await createTables();
+          await createInitialUsers();
+          await createInitialPosts();
+          await createInitialTags(); // new
+        } catch (error) {
+          console.log("Error during rebuildDB")
+          throw error;
+        }
+      }
+      
   rebuildDB()
     .then(testDB)
     .catch(console.error)
     .finally(() => client.end());
+
