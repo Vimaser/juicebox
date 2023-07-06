@@ -42,3 +42,203 @@ HOW DO I KNOW I'M DONE?
 
     By the end of this part of the project there won't be much for us to look at or share, that will come first at the end of Part 2 (the API)
 
+
+# Juicebox Part II
+
+- Prework
+
+# JWT
+
+Used for authorize, not authentication. Makes sure same user. Uses session. Uses JSON web token.
+
+# Setting upoo a basic server using express
+
+NPM install express
+package.json
+
+to use express we require it.
+
+```JavaScript
+
+const express = require('express');
+
+const server = express();
+
+server.listen(5000, () ={
+    console.log("Servers is up!");
+});
+
+//attaching a general route
+
+server.get('/hello', function (req, res, next) {
+    console.log('Hello World!');
+    console.log(req);
+    console.log(res);
+    console.log(next);
+});
+
+console.log(express);
+
+// testing with curl
+curl http://localhost:5000/hello
+```
+
+Package.json
+"server:dev": "nodemon index.js",
+"server:prod": "node index.js"
+
+NPM run server:dev
+
+# Subroutes with express router
+
+```JavaScript
+
+const express = require('express');
+const server = express();
+
+/* server.get('/hello', function (req, res, next){
+    res.send("hello there");
+}); */
+
+server.use('/app', require('./routes/index.js'))
+
+server.listem(5000, () => {
+    console.log("Server is up!");
+});
+
+// Routers
+```
+
+mkdir routes or api
+cd route / api
+touch index.js
+
+```JavaScript
+// create router
+const appRouter = require('express').Router();
+
+appRouter.use((req, res, next) => {
+    console.log(req.url);
+
+    next();
+});
+
+appRouter.get('/', (req, res, next) => {
+    res.send({
+        message: 'welcome to my app.'
+    });
+});
+
+appRouter.post('/sayHello', (req, res, next) => {
+    res.send({
+        message: 'thanks for sending the data!'
+    });
+});
+
+// -X POST
+
+// export router
+module.exports = appRouter;
+
+```
+
+# BodyParser and Advnaced Curl
+
+
+```JavaScript
+
+const express = require('express');
+const server = express();
+
+const bodyParser = require('body-parser');
+
+server.use(bodyParser.json());
+
+server.use((req, res, next) => {
+    console.log("Body is now", req.body);
+    next();
+});
+
+const  appRouter = require('./routes');
+server.use('/app', appRouter);
+
+server.listen(5000, () => {
+    console.log("Server is up!");
+});
+
+```
+
+//testing curl
+
+-H "Content-Type: application/json"
+
+-d '{"key":"value"}'
+
+
+# JSON WEB TOKENS
+
+```JavaScript
+
+const express = require('express');
+const server = express();
+
+const bodyParser = require('body-parser');
+
+server.use(bodyParser.json());
+
+server.use((req, res, next) => {
+    console.log("Body is now", req.body);
+    next();
+});
+
+const  appRouter = require('./routes');
+server.use('/app', appRouter);
+
+server.listen(5000, () => {
+    console.log("Server is up!");
+});
+
+// jsonwebtoken package
+```
+
+go up a level
+
+mkdir jwt
+touch index.js
+
+```JavaScript
+const jwt = require('jsonwebtoke');
+
+const SECRET_INGREDIENT = "krabby patty";
+
+function encodeData (data) {
+    const encoded = jwt.sign(
+        data.
+        SECRET_INGREDIENT.
+    );
+
+    return encoded;
+}
+
+function decodeData(encodedData) {
+    const data = jwt.verify(
+        encodedData,
+        SECRET_INGREDIENT
+    );
+
+    return data;
+}
+
+module.export = {
+    encodedData,
+    decodedData
+}
+```
+
+CMD line
+
+const { encodedData, decodedData } = require('./jwt')
+
+encodedData('original message')
+
+decodeData('hashstring')

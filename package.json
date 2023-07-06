@@ -4,10 +4,17 @@
   "description": "SQL     - How to connect to PostgreSQL from the command line     - Basic PostgreSQL commands like \\c, \\d     - The basics of creating/dropping an entire database     - The basics of creating/dropping a table     - Basic data types     - What a primary key is     - What a foreign key is     - How to insert data into a database     - How to retrieve data from a database     - How to update data in a database     - How to join related tables into one mega-table",
   "main": "index.js",
   "scripts": {
-   "start": "node index.js",
-   "seed:dev": "nodemon ./db/seed.js"
+    "start": "node index.js",
+    "seed:dev": "nodemon ./db/seed.js",
+    "start:dev": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "morgan": "^1.10.0",
+    "pg": "^8.11.1"
+  }
 }

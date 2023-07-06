@@ -159,8 +159,6 @@ async function createPost({
       throw error;
     }
   }
-  
-  
 
   async function getAllPosts() {
     try {
@@ -179,8 +177,6 @@ async function createPost({
     }
   }
   
-  
-  
   async function getPostsByUser(userId) {
     try {
       const { rows: postids } = await client.query(`
@@ -198,40 +194,6 @@ async function createPost({
       throw error;
     }
   }
-
-/*   async function createTags(tagList) {
-    if (tagList.length === 0) {
-      return;
-    }
-    // need something like: $1), ($2), ($3
-    const insertValues = tagList.map(
-      (_, index) => `$${index + 1}`).join('), (');
-    // then we can use: (${ insertValues }) in our string template
-    // need something like $1, $2, $3
-    const selectValues = tagList.map(
-      (_, index) => `$${index + 1}`).join(', ');
-    // then we can use (${ selectValues }) in our string template
-    try {
-      console.log(insertValues)
-      // insert the tags, doing nothing on conflict
-      // returning nothing, we'll query after
-      const { rows: [tags] } = await client.query(`
-        INSERT INTO tags(name)
-        VALUES (${insertValues});
-      `, tagList);
-      // select all tags where the name is in our taglist
-      // return the rows from the query
-      console.log(selectValues)
-      const { rows } = await client.query(`
-        SELECT * FROM tags
-        WHERE name
-        IN (${selectValues});
-      `, tagList);
-      return rows;
-    } catch (error) {
-      throw error;
-    }
-  } */
 
   async function createTags(tagList) {
     if (tagList.length === 0) {
@@ -322,32 +284,6 @@ async function createPost({
       throw error;
     }
   }
-
-/*   async function createInitialTags() {
-    try {
-      console.log("Starting to create tags...");
-
-      const [happy, sad, inspo, catman] = await createTags([
-        '#happy',
-        '#worst-day-ever',
-        '#youcandoanything',
-        '#canmandoeverything'
-      ]);
-
-      const [postOne, postTwo, postThree] = await getAllPosts();
-
-      await addTagsToPost(postOne.id, [happy, inspo]);
-      await addTagsToPost(postTwo.id, [sad, inspo]);
-      await addTagsToPost(postThree.id, [happy, catman, inspo]);
-    
-      console.log("Finished creating tags!");
-    } catch (error) {
-      console.log("Error creating tags!");
-      throw error;
-    }
-  } */
-
-
 
   async function createInitialPosts() {
     try {
@@ -442,6 +378,19 @@ async function createPost({
       throw error;
     }
   } 
+
+
+  async function getAllTags() {
+    try {
+      const { rows: tags } = await client.query(`
+        SELECT name
+        FROM tags;
+      `);
+      return tags.map(tag => tag.name);
+    } catch (error) {
+      throw error;
+    }
+  }
   
   module.exports = {  
     client,
@@ -460,5 +409,6 @@ async function createPost({
     addTagsToPost,
     createInitialTags,
     getPostsByTagName,
-    createTags
+    createTags,
+    getAllTags
   }
