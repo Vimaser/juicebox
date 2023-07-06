@@ -391,6 +391,20 @@ async function createPost({
       throw error;
     }
   }
+
+  async function getUserByUsername(username) {
+    try {
+      const { rows: [user] } = await client.query(`
+        SELECT *
+        FROM users
+        WHERE username=$1;
+      `, [username]);
+
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
   
   module.exports = {  
     client,
@@ -410,5 +424,6 @@ async function createPost({
     createInitialTags,
     getPostsByTagName,
     createTags,
+    getUserByUsername,
     getAllTags
   }
