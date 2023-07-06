@@ -101,7 +101,7 @@ async function createPost({
 
       const tagList = await createTags(tags);
   
-      return await addTagsToPost(post.id, tagList); //post;
+      return await addTagsToPost(post.id, tagList);
     } catch (error) {
       throw error;
     }
