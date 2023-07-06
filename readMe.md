@@ -242,3 +242,5 @@ const { encodedData, decodedData } = require('./jwt')
 encodedData('original message')
 
 decodeData('hashstring')
+
+//test
