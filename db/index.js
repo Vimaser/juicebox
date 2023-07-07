@@ -160,7 +160,7 @@ async function createPost({
     }
   }
 
-  async function getAllPosts() {
+    async function getAllPosts() {
     try {
       const { rows: postids } = await client.query(`
         SELECT id
@@ -175,7 +175,8 @@ async function createPost({
     } catch (error) {
       throw error;
     }
-  }
+  }  
+  
   
   async function getPostsByUser(userId) {
     try {
@@ -336,6 +337,13 @@ async function createPost({
         FROM posts
         WHERE id=$1;
       `, [postid]);
+
+      if (!post) {
+        throw {
+          name: "PostNotFoundError",
+          message: "Could not find a post with that postId"
+        };
+      }
   
       const { rows: tags } = await client.query(`
         SELECT tags.*
