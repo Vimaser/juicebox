@@ -2,3 +2,4 @@ node_modules
 # Ignore file named `psql.txt`
 psql.txt
 .env
+notes.md

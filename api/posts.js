@@ -99,32 +99,23 @@ postsRouter.delete("/:postId", requireUser, async (req, res, next) => {
   }
 });
 
-//console.log('Testing console.log');
-
-
 postsRouter.get('/', async (req, res, next) => {
   try {
     const allPosts = await getAllPosts();
-    //console.log('All posts:', allPosts);
+  
 
     const posts = allPosts.filter(post => {
-      //console.log('Filtering post:', post);
+      
       if (post.active) {
-        //console.log('Post is active:', post);
+       
         return true;
       }
-    
-    
       if (req.user && post.author.id === req.user.id) {
-        //console.log('Post belongs to current user:', post);
+      
         return true;
       }
-    
-      //console.log('Post is not active and does not belong to current user:', post);
       return false;
     });
-
-    //console.log('Filtered posts:', posts);
 
     res.send({
       posts
@@ -133,7 +124,5 @@ postsRouter.get('/', async (req, res, next) => {
     next({ name, message });
   }
 });
-
-
 
 module.exports = postsRouter;
